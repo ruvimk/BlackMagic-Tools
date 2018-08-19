@@ -1,0 +1,28 @@
+Application started. 
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+..\..\Sources\BlackMagic-Interface.asm: 1131
+192.168.1.215
+..\..\Sources\BlackMagic-Interface.asm: 1223
+..\..\Sources\BlackMagic-Interface.asm: 1235	-> 80040154
+..\..\Sources\BlackMagic-Interface.asm: 1236	-> 80040154
+Could not create Switcher Discovery instance. Is the ATEM Switcher Software installed? 
+..\..\Sources\BlackMagic-Interface.asm: 1244	->    2
+..\..\Sources\BlackMagic-Interface.asm: 1245	-> 00000002
+..\..\Sources\BlackMagic-Interface.asm: 1403	->    2
+Exiting application. 
+
+

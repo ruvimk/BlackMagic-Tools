@@ -1,0 +1,56 @@
+Application started. 
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+..\..\Sources\BlackMagic-Interface.asm: 1114
+192.168.1.215
+..\..\Sources\BlackMagic-Interface.asm: 1206
+..\..\Sources\BlackMagic-Interface.asm: 1218	-> 00000000
+..\..\Sources\BlackMagic-Interface.asm: 1219	-> 00000000
+..\..\Sources\BlackMagic-Interface.asm: 1233
+..\..\Sources\BlackMagic-Interface.asm: 1250
+..\..\Sources\BlackMagic-Interface.asm: 1260
+..\..\Sources\BlackMagic-Interface.asm: 1276
+..\..\Sources\BlackMagic-Interface.asm: 1363
+..\..\Sources\BlackMagic-Interface.asm: 1371
+..\..\Sources\BlackMagic-Interface.asm: 1281
+..\..\Sources\BlackMagic-Interface.asm: 1357
+COM initialized fine. 
+..\..\Sources\BlackMagic-Interface.asm: 1386	->    0
+..\..\Sources\BlackMagic-Interface.asm: 1709
+..\..\Sources\BlackMagic-Interface.asm: 1711	-> 04347020
+..\..\Sources\BlackMagic-Interface.asm: 1712	-> 5440
+..\..\Sources\BlackMagic-Interface.asm: 1715
+..\..\Sources\BlackMagic-Interface.asm: 1720	-> 04347020
+..\..\Sources\BlackMagic-Interface.asm: 1729	-> 6D06BBA0
+..\..\Sources\BlackMagic-Interface.asm: 1731	-> 6CE6E900
+..\..\Sources\BlackMagic-Interface.asm: 1734	-> 00000000
+..\..\Sources\BlackMagic-Interface.asm: 1749	-> 024DBF08
+..\..\Sources\BlackMagic-Interface.asm: 1751
+..\..\Sources\BlackMagic-Interface.asm: 1756	-> 024DBF08
+..\..\Sources\BlackMagic-Interface.asm: 1759	-> 6D06BE78
+..\..\Sources\BlackMagic-Interface.asm: 1761	-> 6CE80C10
+..\..\Sources\BlackMagic-Interface.asm: 1764
+..\..\Sources\BlackMagic-Interface.asm: 1778
+..\..\Sources\BlackMagic-Interface.asm: 1797
+..\..\Sources\BlackMagic-Interface.asm: 1798	-> 024CCBC8
+..\..\Sources\BlackMagic-Interface.asm: 1868
+..\..\Sources\BlackMagic-Interface.asm: 1877	-> 024CCBC8
+..\..\Sources\BlackMagic-Interface.asm: 1880	-> 6D06C170
+..\..\Sources\BlackMagic-Interface.asm: 1813
+..\..\Sources\BlackMagic-Interface.asm: 1816	-> 024CCBC8
+..\..\Sources\BlackMagic-Interface.asm: 1819	-> 6D06C170
+..\..\Sources\BlackMagic-Interface.asm: 1823	-> 6CE7AE30
+..\..\Sources\BlackMagic-Interface.asm: 1834
