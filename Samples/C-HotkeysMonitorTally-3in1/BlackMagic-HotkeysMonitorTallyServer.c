@@ -247,7 +247,7 @@ int main (int argc, char * argv []) {
 		380, 
 		250, 
 		SWP_SHOWWINDOW); 
-	while (GetMessageA (&msg, 0, 0, 0) && isRunning) { 
+	while (isRunning && GetMessageA (&msg, 0, 0, 0)) { 
 		switch (msg.message) { 
 			case WM_CLOSE: 
 				keepRunning = FALSE; 
