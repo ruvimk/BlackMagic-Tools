@@ -77,7 +77,17 @@ DWORD WINAPI changeMP1 (LPVOID lpParam);
 #define ID_PREVIEW_8 48 
 #define ID_PREVIEW_9 49 
 #define ID_PREVIEW_10 50 
-#define ID_TOGGLE_HOTKEYS 51 
+#define ID_NUM_PREVIEW_1 51 
+#define ID_NUM_PREVIEW_2 52 
+#define ID_NUM_PREVIEW_3 53 
+#define ID_NUM_PREVIEW_4 54 
+#define ID_NUM_PREVIEW_5 55 
+#define ID_NUM_PREVIEW_6 56 
+#define ID_NUM_PREVIEW_7 57 
+#define ID_NUM_PREVIEW_8 58 
+#define ID_NUM_PREVIEW_9 59 
+#define ID_NUM_PREVIEW_10 60 
+#define ID_TOGGLE_HOTKEYS 81 
 void registerHotkeys () { 
 	RegisterHotKey (NULL, ID_MP1, MOD_NOREPEAT, 'J'); 
 	RegisterHotKey (NULL, ID_MP2, MOD_NOREPEAT, 'K'); 
@@ -103,6 +113,8 @@ void registerHotkeys () {
 	size_t i; 
 	for (i = ID_PREVIEW_1; i <= ID_PREVIEW_10; i++) 
 		RegisterHotKey (NULL, i, MOD_NOREPEAT, i == ID_PREVIEW_10 ? '0' : ('1' + i - ID_PREVIEW_1)); 
+	for (i = ID_NUM_PREVIEW_1; i <= ID_NUM_PREVIEW_10; i++) 
+		RegisterHotKey (NULL, i, MOD_NOREPEAT, i == ID_NUM_PREVIEW_10 ? VK_NUMPAD0 : (VK_NUMPAD1 + i - ID_NUM_PREVIEW_1)); 
 } 
 void unregisterHotkeys () { 
 	UnregisterHotKey (NULL, ID_MP1); 
@@ -128,6 +140,8 @@ void unregisterHotkeys () {
 	UnregisterHotKey (NULL, ID_EMERGENCY_RETURN); 
 	size_t i; 
 	for (i = ID_PREVIEW_1; i <= ID_PREVIEW_10; i++) 
+		UnregisterHotKey (NULL, i); 
+	for (i = ID_NUM_PREVIEW_1; i <= ID_NUM_PREVIEW_10; i++) 
 		UnregisterHotKey (NULL, i); 
 } 
 void registerAlwaysOnHotkeys () { 
@@ -449,6 +463,8 @@ int main (int argc, char * argv []) {
 						default: 
 						if (msg.wParam >= ID_PREVIEW_1 && msg.wParam <= ID_PREVIEW_10) 
 							output = 0; 
+						else if (msg.wParam >= ID_NUM_PREVIEW_1 && msg.wParam <= ID_NUM_PREVIEW_10) 
+							output = 0; 
 					} 
 					#if DEBUG 
 						print ("Output selected: "); 
@@ -523,6 +539,8 @@ int main (int argc, char * argv []) {
 						default: 
 						if (msg.wParam >= ID_PREVIEW_1 && msg.wParam <= ID_PREVIEW_10) 
 							needInput = msg.wParam + INPUT_1 - ID_PREVIEW_1; 
+						else if (msg.wParam >= ID_NUM_PREVIEW_1 && msg.wParam <= ID_NUM_PREVIEW_10) 
+							needInput = msg.wParam + INPUT_1 - ID_NUM_PREVIEW_1; 
 					} 
 					#if DEBUG 
 						print ("Input selected: "); 
