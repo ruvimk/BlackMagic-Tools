@@ -246,7 +246,7 @@ int main (int argc, char * argv []) {
 	if (taskbarWnd && GetWindowRect (taskbarWnd, &taskbarRect)) { 
 		if (taskbarRect.right > 320 && taskbarRect.top > 250) { 
 			needX = 0; //taskbarRect.right - 320; 
-			needY = taskbarRect.top - 250; 
+			needY = taskbarRect.top - 230 - (250 - 204); 
 		} 
 	} 
 	HWND hWindow = CreateWindowEx (0, // Window styles. 
