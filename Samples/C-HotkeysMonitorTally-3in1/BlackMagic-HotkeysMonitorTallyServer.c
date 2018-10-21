@@ -173,6 +173,10 @@ SOCKET serverSocket;
 BOOL wsaReady = FALSE; 
 
 
+BOOL hkRegistered = FALSE; 
+BOOL hkTurnedOn = TRUE; 
+
+
 
 int main (int argc, char * argv []) { 
 	// BOOL isRestart = killProcessByName ("BlackMagic-AuxMonitor.exe", FALSE); 
@@ -202,9 +206,7 @@ int main (int argc, char * argv []) {
 	long long input = 0; 
 	unsigned long output = 0; // 0 = PGM, 1 = AUX1&2; 
 	BOOL keepRunning = TRUE; 
-	BOOL hkRegistered = FALSE; 
 	BOOL alwaysOnRegistered = FALSE; 
-	BOOL hkTurnedOn = TRUE; 
 	DWORD timer = enableTimer (); 
 	if (!timer) { 
 		DWORD lastError = GetLastError (); 
@@ -244,7 +246,7 @@ int main (int argc, char * argv []) {
 		wc.lpszClassName, 
 		"ATEM Hotkeys, Monitor, & Tally", 
 		WS_OVERLAPPEDWINDOW | WS_VSCROLL, 
-		needX, needY, 380, 250, 
+		needX, needY, 380, 230 + (250 - 204), 
 		NULL, // Parent 
 		NULL, // Menu 
 		wc.hInstance, 
@@ -259,7 +261,7 @@ int main (int argc, char * argv []) {
 		needX, 
 		needY, 
 		380, 
-		250, 
+		230 + (250 - 204), 
 		SWP_SHOWWINDOW); 
 	while (isRunning && GetMessageA (&msg, 0, 0, 0)) { 
 		switch (msg.message) { 
@@ -642,6 +644,7 @@ void create_tally_text (long long input_code, char * text) {
 LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) { 
 	static HBITMAP bmBackground = NULL; 
 	static HFONT hCustomFont = NULL; 
+	static HFONT hFooterFont = NULL; 
 	static unsigned short prevVScrollPosition = 0; 
 	static unsigned short firstVScrollPosition = 0; 
 	switch (uMsg) { 
@@ -657,6 +660,8 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			GetObject (hFont, sizeof (LOGFONT), &logFont); 
 			logFont.lfHeight = 42; // Change this to whatever font size needed. 
 			hCustomFont = CreateFontIndirect (&logFont); 
+			logFont.lfHeight = 16; 
+			hFooterFont = CreateFontIndirect (&logFont); 
 			return 0; 
 		case WM_DESTROY: 
 			isRunning = 0; 
@@ -664,6 +669,8 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				DeleteObject (bmBackground); 
 			if (hCustomFont) 
 				DeleteObject (hCustomFont); 
+			if (hFooterFont) 
+				DeleteObject (hFooterFont); 
 			PostQuitMessage (0); 
 			return 0; 
 		case WM_PAINT: 
@@ -694,6 +701,16 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			target.top += 68; 
 			target.bottom += 68; 
 			create_tally_text (aux_outputs[2], string1); 
+			DrawText (hdc, string1, strlen (string1), &target, DT_CENTER); 
+			SelectObject (hdc, hFooterFont); 
+			target.left = 20; 
+			target.right = 347 - 20; 
+			target.top = 210; 
+			target.bottom = 230; 
+			strcpy (string1, "Hotkeys: "); 
+			if (!hkTurnedOn) strcat (string1, "DISABLED"); 
+			else if (hkRegistered) strcat (string1, "Ready"); 
+			else strcat (string1, "Inactive"); 
 			DrawText (hdc, string1, strlen (string1), &target, DT_CENTER); 
 			SelectObject (hdc, oldFont); 
 			// Done: 
