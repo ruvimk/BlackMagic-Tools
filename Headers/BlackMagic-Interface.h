@@ -51,9 +51,15 @@ DWORD WINAPI bm_check (); // Returns 0 if success.
 
 BOOL WINAPI bm_set_program_input (long long iInput); 
 BOOL WINAPI bm_set_preview_input (long long iInput); 
+BOOL WINAPI bm_set_transition_position (double position); 
 BOOL WINAPI bm_get_program_input (long long * lpInput); 
 BOOL WINAPI bm_get_preview_input (long long * lpInput); 
+BOOL WINAPI bm_get_transition_position (double * lpPosition); 
 BOOL WINAPI bm_is_in_transition (); 
+
+BOOL WINAPI bm_perform_auto_transition (); 
+BOOL WINAPI bm_perform_cut (); 
+BOOL WINAPI bm_perform_fade_to_black (); 
 
 void * WINAPI bm_get_downstream_key (); 
 
@@ -74,6 +80,7 @@ DWORD WINAPI bm_set_media_player_source (unsigned long mp_start_index, unsigned 
 void * WINAPI bm_get_mix_block (); 
 void * WINAPI bm_get_key (); 
 
+BOOL WINAPI enable_key1_live (BOOL whether_live); 
 BOOL WINAPI bm_is_key1_live (); 
 
 void WINAPI bm_free (void * object); 

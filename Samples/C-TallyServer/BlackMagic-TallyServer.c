@@ -170,12 +170,17 @@ DWORD WINAPI ServeClientThread (LPVOID lpParam) {
 			cameraNumber = c - '0'; 
 		printf ("Connected camera: %d\n", cameraNumber); 
 	} 
+	void * dsk = cameraNumber == 1 ? bm_get_downstream_key () : nullptr; 
 	const char * quick_header = "HTTP/1.0 200 OK\nContent-Type: text/plain\n\n"; 
 	send (clientSocket, quick_header, strlen (quick_header), 0); 
 	result = send (clientSocket, (const char *) &state, sizeof (state), 0); 
 	DWORD lastSend = GetTickCount (); 
 	do { 
 		state = makeState (cameraNumber); 
+		if (cameraNumber == 1) { 
+			state |= bm_dsk_get_on_air (dsk); 
+			state |= bm_is_key1_live (); 
+		} 
 		DWORD now = GetTickCount (); 
 		if (state != prev || now - lastSend > 100) { 
 			result = send (clientSocket, (const char *) &state, sizeof (state), 0); 
@@ -194,6 +199,7 @@ DWORD WINAPI ServeClientThread (LPVOID lpParam) {
 		Sleep (20); 
 	} while (isRunning); 
 	printf ("Disconnected camera: %d\n", cameraNumber); 
+	if (dsk) bm_free (dsk); 
 	closesocket (clientSocket); 
 	ExitThread (0); 
 	return 0; 

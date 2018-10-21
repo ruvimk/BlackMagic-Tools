@@ -96,10 +96,17 @@ global _bm_get_program_input@4
 global _bm_get_preview_input@4 
 global _bm_is_in_transition@0 
 
+global _bm_perform_auto_transition@0 
+global _bm_perform_cut@0 
+global _bm_perform_fade_to_black@0 
+global _bm_set_transition_position@8 
+global _bm_get_transition_position@4 
+
 global _bm_get_mix_block@0 
 global _bm_get_key@4 
 global _bm_get_key@0 
 
+global _enable_key1_live@4 
 global _bm_is_key1_live@0 
 
 global _bm_get_downstream_key@0 ;; Returns void * 
@@ -211,6 +218,26 @@ global ?ruvim_cleanup@@YGXXZ
 		%endif 
 	%endif 
 %endmacro 
+
+
+
+
+;typedef [v1_enum] enum	_BMDSwitcherMixEffectBlockPropertyId {
+%define bmdSwitcherMixEffectBlockPropertyIdProgramInput              0x70676970 ;	// Int type (BMDSwitcherInputId), Get/Set
+%define bmdSwitcherMixEffectBlockPropertyIdPreviewInput              0x70766970 ;	// Int type (BMDSwitcherInputId), Get/Set
+%define bmdSwitcherMixEffectBlockPropertyIdTransitionPosition        0x74737073 ;	// Float type, Get/Set
+%define bmdSwitcherMixEffectBlockPropertyIdTransitionFramesRemaining 0x7466726D ;	// Int type, Get only
+%define bmdSwitcherMixEffectBlockPropertyIdInTransition              0x69697473 ;	// Flag type, Get only
+%define bmdSwitcherMixEffectBlockPropertyIdFadeToBlackFramesRemaining 0x6666726D ;	// Int type, Get only
+%define bmdSwitcherMixEffectBlockPropertyIdInFadeToBlack             0x69696662 ;	// Flag type, Get only
+%define bmdSwitcherMixEffectBlockPropertyIdPreviewLive               0x70766C76 ;	// Flag type, Get only
+%define bmdSwitcherMixEffectBlockPropertyIdPreviewTransition         0x70767473 ;	// Flag type, Get/Set
+%define bmdSwitcherMixEffectBlockPropertyIdInputAvailabilityMask     0x6961766D ;	// Int type (BMDSwitcherInputAvailability), Get only
+%define bmdSwitcherMixEffectBlockPropertyIdFadeToBlackRate           0x66746272 ;	// Int type, Get/Set
+%define bmdSwitcherMixEffectBlockPropertyIdFadeToBlackFullyBlack     0x66746262 ;	// Flag type, Get/Set
+%define bmdSwitcherMixEffectBlockPropertyIdFadeToBlackInTransition   0x66746274 ;	// Flag type, Get only
+;} BMDSwitcherMixEffectBlockPropertyId;
+
 
 
 
@@ -724,6 +751,7 @@ is_key1_live:
 ret 
 
 enable_key1_live: 
+_enable_key1_live@4: 
 	push ebp 
 	mov ebp, esp 
 	sub esp, 8 
@@ -3425,6 +3453,311 @@ _bm_get_preview_input@4:
 	pop ebp 
 ret 4 
 
+bm_perform_auto_transition: 
+_bm_perform_auto_transition@0: 
+	push ebp 
+	mov ebp, esp 
+	
+	sub esp, 4 
+	save 
+	;; Work: 
+	call bm_get_mix_block 
+	mov [ebp-4], eax 
+	debug_hex eax 
+	test eax, eax 
+	jz .done 
+	
+	;; No arguments 
+	
+	mov ecx, eax ;; THIS pointer. 
+	mov eax, [eax] ;; VTable. 
+	mov eax, [eax+56] ;; PerformAutoTransition () 
+	push ecx ;; Arg0. 
+	call eax 
+	debug_hex eax 
+	test eax, eax 
+	jns .set_ok 
+	
+	imhere 
+	
+	xor eax, eax 
+	jmp .free_block 
+	
+	.set_ok: 
+	mov eax, 1 ;; TRUE. 
+	
+	debug_hex eax 
+	
+	.free_block: 
+	push eax ;; Save 
+	mov eax, [ebp-4] 
+	mov ecx, eax 
+	debug_hex eax 
+	mov eax, [eax] ;; VT. 
+	debug_hex eax 
+	mov eax, [eax+8] ;; Release () 
+	debug_hex eax 
+	push ecx ;; Arg0 
+	imhere 
+	call eax 
+	debug_hex eax 
+	pop eax ;; Restore 
+	.done: 
+	restore 
+	imhere 
+	
+	mov esp, ebp 
+	pop ebp 
+ret 0 
+
+bm_perform_cut: 
+_bm_perform_cut@0: 
+	push ebp 
+	mov ebp, esp 
+	
+	sub esp, 4 
+	save 
+	;; Work: 
+	call bm_get_mix_block 
+	mov [ebp-4], eax 
+	debug_hex eax 
+	test eax, eax 
+	jz .done 
+	
+	;; No arguments 
+	
+	mov ecx, eax ;; THIS pointer. 
+	mov eax, [eax] ;; VTable. 
+	mov eax, [eax+60] ;; PerformCut () 
+	push ecx ;; Arg0. 
+	call eax 
+	debug_hex eax 
+	test eax, eax 
+	jns .set_ok 
+	
+	imhere 
+	
+	xor eax, eax 
+	jmp .free_block 
+	
+	.set_ok: 
+	mov eax, 1 ;; TRUE. 
+	
+	debug_hex eax 
+	
+	.free_block: 
+	push eax ;; Save 
+	mov eax, [ebp-4] 
+	mov ecx, eax 
+	debug_hex eax 
+	mov eax, [eax] ;; VT. 
+	debug_hex eax 
+	mov eax, [eax+8] ;; Release () 
+	debug_hex eax 
+	push ecx ;; Arg0 
+	imhere 
+	call eax 
+	debug_hex eax 
+	pop eax ;; Restore 
+	.done: 
+	restore 
+	imhere 
+	
+	mov esp, ebp 
+	pop ebp 
+ret 0 
+
+bm_perform_fade_to_black: 
+_bm_perform_fade_to_black@0: 
+	push ebp 
+	mov ebp, esp 
+	
+	sub esp, 4 
+	save 
+	;; Work: 
+	call bm_get_mix_block 
+	mov [ebp-4], eax 
+	debug_hex eax 
+	test eax, eax 
+	jz .done 
+	
+	;; No arguments 
+	
+	mov ecx, eax ;; THIS pointer. 
+	mov eax, [eax] ;; VTable. 
+	mov eax, [eax+64] ;; PerformFadeToBlack () 
+	push ecx ;; Arg0. 
+	call eax 
+	debug_hex eax 
+	test eax, eax 
+	jns .set_ok 
+	
+	imhere 
+	
+	xor eax, eax 
+	jmp .free_block 
+	
+	.set_ok: 
+	mov eax, 1 ;; TRUE. 
+	
+	debug_hex eax 
+	
+	.free_block: 
+	push eax ;; Save 
+	mov eax, [ebp-4] 
+	mov ecx, eax 
+	debug_hex eax 
+	mov eax, [eax] ;; VT. 
+	debug_hex eax 
+	mov eax, [eax+8] ;; Release () 
+	debug_hex eax 
+	push ecx ;; Arg0 
+	imhere 
+	call eax 
+	debug_hex eax 
+	pop eax ;; Restore 
+	.done: 
+	restore 
+	imhere 
+	
+	mov esp, ebp 
+	pop ebp 
+ret 0 
+
+;; Argument: double (64-bit), between 0 and 1; 
+bm_set_transition_position: 
+_bm_set_transition_position@8: 
+	push ebp 
+	mov ebp, esp 
+	
+	sub esp, 4 
+	save 
+	;; Work: 
+	debug_hex dword [ebp+12] 
+	debug_hex dword [ebp+8] 
+	call bm_get_mix_block 
+	mov [ebp-4], eax 
+	debug_hex eax 
+	test eax, eax 
+	jz .done 
+	
+	push dword [ebp+12] 
+	push dword [ebp+8] 
+	push dword bmdSwitcherMixEffectBlockPropertyIdTransitionPosition 
+	
+	mov ecx, eax ;; THIS pointer. 
+	mov eax, [eax] ;; VTable. 
+	mov eax, [eax+40] ;; SetFloat () 
+	push ecx ;; Arg0. 
+	call eax 
+	debug_hex eax 
+	test eax, eax 
+	jns .set_ok 
+	
+	imhere 
+	
+	xor eax, eax 
+	jmp .free_block 
+	
+	.set_ok: 
+	mov eax, 1 ;; TRUE. 
+	
+	debug_hex eax 
+	
+	.free_block: 
+	push eax ;; Save 
+	mov eax, [ebp-4] 
+	mov ecx, eax 
+	debug_hex eax 
+	mov eax, [eax] ;; VT. 
+	debug_hex eax 
+	mov eax, [eax+8] ;; Release () 
+	debug_hex eax 
+	push ecx ;; Arg0 
+	imhere 
+	call eax 
+	debug_hex eax 
+	pop eax ;; Restore 
+	.done: 
+	restore 
+	imhere 
+	
+	mov esp, ebp 
+	pop ebp 
+ret 8 
+
+;; Argument: double * 
+bm_get_transition_position: 
+_bm_get_transition_position@4: 
+	push ebp 
+	mov ebp, esp 
+	sub esp, 4 
+	save 
+	;; Work: 
+	debug_hex dword [ebp+8] 
+	call bm_get_mix_block 
+	mov [ebp-4], eax 
+	debug_hex eax 
+	debug_hex [ebp-4] 
+	test eax, eax 
+	jz .done 
+	
+	debug_hex ebp 
+	
+	push dword [ebp+8] 
+	push dword bmdSwitcherMixEffectBlockPropertyIdTransitionPosition 
+	
+	debug_hex [ebp-4] 
+	
+	mov ecx, eax ;; THIS pointer. 
+	imhere 
+	mov eax, [eax] ;; VTable. 
+	mov eax, [eax+44] ;; GetFloat () 
+	imhere 
+	push ecx ;; Arg0. 
+	call eax 
+	debug_hex eax 
+	debug_hex [ebp-4] 
+	test eax, eax 
+	jns .get_ok 
+	
+	imhere 
+	
+	debug_hex [ebp-4] 
+	
+	xor eax, eax 
+	jmp .free_block 
+	
+	.get_ok: 
+	mov eax, 1 ;; TRUE. 
+	
+	debug_hex [ebp-4] 
+	
+	debug_hex eax 
+	
+	.free_block: 
+	push eax ;; Save 
+	imhere 
+	debug_hex esp 
+	debug_hex [ebp-4] 
+	mov eax, [ebp-4] 
+	mov ecx, eax 
+	debug_hex eax 
+	mov eax, [eax] ;; VT. 
+	debug_hex eax 
+	mov eax, [eax+8] ;; Release () 
+	debug_hex eax 
+	push ecx ;; Arg0 
+	call eax 
+	debug_hex eax 
+	pop eax ;; Restore 
+	.done: 
+	restore 
+	imhere 
+	mov esp, ebp 
+	pop ebp 
+ret 4 
+
 bm_set_input: 
 	push ebp 
 	mov ebp, esp 
@@ -3558,22 +3891,6 @@ ret 8
 
 
 section .data 
-
-;typedef [v1_enum] enum	_BMDSwitcherMixEffectBlockPropertyId {
-%define bmdSwitcherMixEffectBlockPropertyIdProgramInput              0x70676970 ;	// Int type (BMDSwitcherInputId), Get/Set
-%define bmdSwitcherMixEffectBlockPropertyIdPreviewInput              0x70766970 ;	// Int type (BMDSwitcherInputId), Get/Set
-%define bmdSwitcherMixEffectBlockPropertyIdTransitionPosition        0x74737073 ;	// Float type, Get/Set
-%define bmdSwitcherMixEffectBlockPropertyIdTransitionFramesRemaining 0x7466726D ;	// Int type, Get only
-%define bmdSwitcherMixEffectBlockPropertyIdInTransition              0x69697473 ;	// Flag type, Get only
-%define bmdSwitcherMixEffectBlockPropertyIdFadeToBlackFramesRemaining 0x6666726D ;	// Int type, Get only
-%define bmdSwitcherMixEffectBlockPropertyIdInFadeToBlack             0x69696662 ;	// Flag type, Get only
-%define bmdSwitcherMixEffectBlockPropertyIdPreviewLive               0x70766C76 ;	// Flag type, Get only
-%define bmdSwitcherMixEffectBlockPropertyIdPreviewTransition         0x70767473 ;	// Flag type, Get/Set
-%define bmdSwitcherMixEffectBlockPropertyIdInputAvailabilityMask     0x6961766D ;	// Int type (BMDSwitcherInputAvailability), Get only
-%define bmdSwitcherMixEffectBlockPropertyIdFadeToBlackRate           0x66746272 ;	// Int type, Get/Set
-%define bmdSwitcherMixEffectBlockPropertyIdFadeToBlackFullyBlack     0x66746262 ;	// Flag type, Get/Set
-%define bmdSwitcherMixEffectBlockPropertyIdFadeToBlackInTransition   0x66746274 ;	// Flag type, Get only
-;} BMDSwitcherMixEffectBlockPropertyId;
 
 section .text 
 

@@ -1,0 +1,6 @@
+Application started. 
+192.168.1.215
+Error connecting: bmdSwitcherConnectToFailureNoResponse
+Exiting application. 
+
+
