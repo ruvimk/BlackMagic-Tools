@@ -177,6 +177,13 @@ BOOL hkRegistered = FALSE;
 BOOL hkTurnedOn = TRUE; 
 
 
+void redrawFooter (HWND hWindow) { 
+	InvalidateRect (hWindow, 0, TRUE); 
+} 
+void redrawOutputs (HWND hWindow) { 
+	InvalidateRect (hWindow, 0, FALSE); 
+} 
+
 
 int main (int argc, char * argv []) { 
 	// BOOL isRestart = killProcessByName ("BlackMagic-AuxMonitor.exe", FALSE); 
@@ -308,7 +315,7 @@ int main (int argc, char * argv []) {
 							UpdateWindow (hWindow); 
 						} 
 						if (changed) 
-							InvalidateRect (hWindow, NULL, 1); 
+							redrawOutputs (hWindow); 
 					} else { 
 						BOOL changed = 0; 
 						for (size_t i = 0; i < 3; i++) { 
@@ -323,7 +330,7 @@ int main (int argc, char * argv []) {
 						i_transition = FALSE; 
 						changed |= old_pgm != i_program || old_pvw != i_preview || old_transition != i_transition; 
 						if (changed) 
-							InvalidateRect (hWindow, NULL, 1); 
+							redrawOutputs (hWindow); 
 					} 
 					// Do the hotkeys check: 
 					HWND hWnd = GetForegroundWindow (); 
@@ -339,6 +346,7 @@ int main (int argc, char * argv []) {
 							if (!alwaysOnRegistered) { 
 								registerAlwaysOnHotkeys (); 
 								alwaysOnRegistered = TRUE; 
+								redrawFooter (hWindow); 
 							} 
 						} else { 
 							if (hkRegistered) { 
@@ -353,6 +361,7 @@ int main (int argc, char * argv []) {
 							if (alwaysOnRegistered) { 
 								unregisterAlwaysOnHotkeys (); 
 								alwaysOnRegistered = FALSE; 
+								redrawFooter (hWindow); 
 							} 
 						} 
 					} else { 
@@ -363,6 +372,7 @@ int main (int argc, char * argv []) {
 						if (alwaysOnRegistered) { 
 							unregisterAlwaysOnHotkeys (); 
 							alwaysOnRegistered = FALSE; 
+							redrawFooter (hWindow); 
 						} 
 					} 
 				} 
@@ -530,8 +540,10 @@ int main (int argc, char * argv []) {
 								hkTurnedOn = FALSE; 
 								unregisterHotkeys (); 
 								hkRegistered = FALSE; 
+								redrawFooter (hWindow); 
 							} else { 
 								hkTurnedOn = TRUE; 
+								redrawFooter (hWindow); 
 							} 
 							break; 
 						default: 
@@ -744,14 +756,13 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 						printf ("Reached end of scroll range; set scrollBackwards=FALSE\n"); 
 					#endif 
 				} 
+				if (vbar_position == 0 || vbar_position == 100) 
+					i_preview = i_program = -1; // Assign an invalid value to it, so it's updated and redrawn on the next check. 
 				prevVScrollPosition = vbar_position; 
 				nowScrolling = TRUE; 
 			} else if (LOWORD (wParam) == SB_ENDSCROLL) { 
 				ShowScrollBar (hWnd, SB_VERT, TRUE); 
-				// Update program and preview inputs NOW, so that the other code doesn't flip the scrollBackwards flag - we already flipped it in the vbar_position == 100 'if' block above. 
-				bm_get_program_input (&i_program); 
-				bm_get_preview_input (&i_preview); 
-				i_transition = bm_is_in_transition (); 
+				i_preview = i_program = -1; // Assign an invalid value to it, so it's updated and redrawn on the next check. 
 				nowScrolling = FALSE; 
 			} 
 			return 0; 
