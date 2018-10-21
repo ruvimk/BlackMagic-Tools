@@ -155,6 +155,11 @@ BOOL scrollBackwards = FALSE;
 BOOL nowScrolling = FALSE; 
 
 
+SOCKET serverSocket; 
+BOOL wsaReady = FALSE; 
+
+
+
 int main (int argc, char * argv []) { 
 	// BOOL isRestart = killProcessByName ("BlackMagic-AuxMonitor.exe", FALSE); 
 	BOOL isRestart = killProcessByName ("BlackMagic-HotkeysAndMonitor.exe", FALSE); 
@@ -246,6 +251,10 @@ int main (int argc, char * argv []) {
 		switch (msg.message) { 
 			case WM_CLOSE: 
 				keepRunning = FALSE; 
+				if (wsaReady) { 
+					wsaReady = FALSE; 
+					WSACleanup (); 
+				} 
 				break; 
 			case WM_TIMER: 
 				if (msg.wParam == timer) { 
@@ -718,7 +727,8 @@ DWORD WINAPI ServerThread (LPVOID lpParam) {
 	WSADATA wsaData; 
 	sockVer = MAKEWORD (2, 2); 
 	WSAStartup (sockVer, &wsaData); 
-	SOCKET serverSocket = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP); 
+	wsaReady = TRUE; 
+	serverSocket = socket (AF_INET, SOCK_STREAM, IPPROTO_TCP); 
 	if (serverSocket == INVALID_SOCKET) { 
 		printf ("Unable to create server socket. Error code: %x\n", WSAGetLastError ()); 
 		WSACleanup (); 
@@ -749,7 +759,10 @@ DWORD WINAPI ServerThread (LPVOID lpParam) {
 		} 
 		CreateThread (NULL, 0, ServeClientThread, (LPVOID) clientSocket, 0, NULL); 
 	} 
-	WSACleanup (); 
+	if (wsaReady) { 
+		wsaReady = TRUE; 
+		WSACleanup (); 
+	} 
 	ExitThread (0); 
 	return 0; 
 } 
