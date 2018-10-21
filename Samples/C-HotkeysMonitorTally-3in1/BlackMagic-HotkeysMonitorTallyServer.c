@@ -733,6 +733,10 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				ShowScrollBar (hWnd, SB_VERT, TRUE); 
 				// InvalidateRect (hWnd, NULL, 0); 
 				// UpdateWindow (hWnd); 
+				// Update program and preview inputs NOW, so that the other code doesn't flip the scrollBackwards flag - we already flipped it in the vbar_position == 100 'if' block above. 
+				bm_get_program_input (&i_program); 
+				bm_get_preview_input (&i_preview); 
+				i_transition = bm_is_in_transition (); 
 				nowScrolling = FALSE; 
 			} 
 			return 0; 
