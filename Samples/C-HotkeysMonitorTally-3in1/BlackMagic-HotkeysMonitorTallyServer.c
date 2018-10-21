@@ -1,6 +1,8 @@
 #include <windows.h> 
 #include <winsock.h> 
 
+#include <string.h> 
+
 #ifndef DEBUG 
 #define DEBUG 0 
 #endif 
@@ -221,9 +223,9 @@ int main (int argc, char * argv []) {
 	} 
 	HWND hWindow = CreateWindowEx (0, // Window styles. 
 		wc.lpszClassName, 
-		"ATEM Hotkeys & Monitor", 
+		"ATEM Hotkeys, Monitor, & Tally", 
 		WS_OVERLAPPEDWINDOW | WS_VSCROLL, 
-		needX, needY, 340, 250, 
+		needX, needY, 380, 250, 
 		NULL, // Parent 
 		NULL, // Menu 
 		wc.hInstance, 
@@ -237,7 +239,7 @@ int main (int argc, char * argv []) {
 		HWND_TOPMOST, 
 		needX, 
 		needY, 
-		340, 
+		380, 
 		250, 
 		SWP_SHOWWINDOW); 
 	while (GetMessageA (&msg, 0, 0, 0) && isRunning) { 
@@ -256,9 +258,13 @@ int main (int argc, char * argv []) {
 							aux_outputs[i] = bm_get_aux_output (i); 
 							changed |= aux_outputs[i] != prev; 
 						} 
+						long long old_pgm = i_program; 
+						long long old_pvw = i_preview; 
+						BOOL old_transition = i_transition; 
 						bm_get_program_input (&i_program); 
 						bm_get_preview_input (&i_preview); 
 						i_transition = bm_is_in_transition (); 
+						changed |= old_pgm != i_program || old_pvw != i_preview || old_transition != i_transition; 
 						if (!nowScrolling) { 
 							double transitionPosition = 0; 
 							bm_get_transition_position (&transitionPosition); 
@@ -278,8 +284,12 @@ int main (int argc, char * argv []) {
 							aux_outputs[i] = -1; 
 							changed |= aux_outputs[i] != prev; 
 						} 
+						long long old_pgm = i_program; 
+						long long old_pvw = i_preview; 
+						BOOL old_transition = i_transition; 
 						i_program = i_preview = 0; 
 						i_transition = FALSE; 
+						changed |= old_pgm != i_program || old_pvw != i_preview || old_transition != i_transition; 
 						if (changed) 
 							InvalidateRect (hWindow, NULL, 1); 
 					} 
@@ -581,6 +591,27 @@ int main (int argc, char * argv []) {
 	return 0; 
 } 
 
+void create_tally_text (long long input_code, char * text) { 
+	if (input_code == INPUT_PREVIEW || input_code == INPUT_PROGRAM) { 
+		long long actual = input_code == INPUT_PREVIEW ? i_preview : i_program; 
+		char highlevel_text [64]; 
+		char number_text [64]; 
+		get_bm_input_name (input_code, highlevel_text); 
+		get_bm_input_name (actual, number_text); 
+		strcpy (text, number_text); 
+		strcat (text, " ("); 
+		strcat (text, highlevel_text); 
+		strcat (text, ")"); 
+	} else { 
+		// char highlevel_text [64]; 
+		// get_bm_input_name (input_code, highlevel_text); 
+		// strcpy (text, highlevel_text); 
+		// strcat (text, " - "); 
+		// strcat (text, highlevel_text); 
+		get_bm_input_name (input_code, text); 
+	} 
+} 
+
 LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) { 
 	static HBITMAP bmBackground = NULL; 
 	static HFONT hCustomFont = NULL; 
@@ -624,18 +655,18 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			RECT target; 
 			target.left = 125; 
 			target.top = 16; 
-			target.right = 290; 
+			target.right = 290 + 40; 
 			target.bottom = 60; 
 			char string1 [64]; 
-			get_bm_input_name (aux_outputs[0], string1); 
+			create_tally_text (aux_outputs[0], string1); 
 			DrawText (hdc, string1, strlen (string1), &target, DT_CENTER); 
 			target.top += 65; 
 			target.bottom += 65; 
-			get_bm_input_name (aux_outputs[1], string1); 
+			create_tally_text (aux_outputs[1], string1); 
 			DrawText (hdc, string1, strlen (string1), &target, DT_CENTER); 
 			target.top += 68; 
 			target.bottom += 68; 
-			get_bm_input_name (aux_outputs[2], string1); 
+			create_tally_text (aux_outputs[2], string1); 
 			DrawText (hdc, string1, strlen (string1), &target, DT_CENTER); 
 			SelectObject (hdc, oldFont); 
 			// Done: 
