@@ -290,6 +290,9 @@ int main (int argc, char * argv []) {
 						if (old_pvw == i_program) { 
 							// Program and preview were swapped. 
 							scrollBackwards = !scrollBackwards; 
+							#if DEBUG 
+								printf ("Program is now previous preview value; toggling scrollBackwards flag; it is now: %d\n", scrollBackwards); 
+							#endif 
 						} 
 						changed |= old_pgm != i_program || old_pvw != i_preview || old_transition != i_transition; 
 						if (!nowScrolling) { 
@@ -720,10 +723,17 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 				printf ("Transition: %g\n", needPosition); 
 				#endif 
 				bm_set_transition_position (needPosition); 
-				if (vbar_position == 100 && !scrollBackwards) 
+				if (vbar_position == 100 && !scrollBackwards) { 
 					scrollBackwards = TRUE; 
-				else if (vbar_position == 0 && scrollBackwards) 
+					#if DEBUG 
+						printf ("Reached end of scroll range; set scrollBackwards=TRUE\n"); 
+					#endif 
+				} else if (vbar_position == 0 && scrollBackwards) { 
 					scrollBackwards = FALSE; 
+					#if DEBUG 
+						printf ("Reached end of scroll range; set scrollBackwards=FALSE\n"); 
+					#endif 
+				} 
 				prevVScrollPosition = vbar_position; 
 				nowScrolling = TRUE; 
 			} else if (LOWORD (wParam) == SB_ENDSCROLL) { 
