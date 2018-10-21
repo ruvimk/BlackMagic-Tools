@@ -264,6 +264,10 @@ int main (int argc, char * argv []) {
 						bm_get_program_input (&i_program); 
 						bm_get_preview_input (&i_preview); 
 						i_transition = bm_is_in_transition (); 
+						if (old_pvw == i_program) { 
+							// Program and preview were swapped. 
+							scrollBackwards = !scrollBackwards; 
+						} 
 						changed |= old_pgm != i_program || old_pvw != i_preview || old_transition != i_transition; 
 						if (!nowScrolling) { 
 							double transitionPosition = 0; 
