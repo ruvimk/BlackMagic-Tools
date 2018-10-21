@@ -717,7 +717,7 @@ LRESULT CALLBACK WindowProc (HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			SelectObject (hdc, hFooterFont); 
 			target.left = 20; 
 			target.right = 347 - 20; 
-			target.top = 210; 
+			target.top = 208; 
 			target.bottom = 230; 
 			strcpy (string1, "Hotkeys: "); 
 			if (!hkTurnedOn) strcat (string1, "DISABLED"); 
