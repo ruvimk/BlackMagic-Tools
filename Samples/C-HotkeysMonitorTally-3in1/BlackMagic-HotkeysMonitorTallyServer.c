@@ -330,13 +330,6 @@ int main (int argc, char * argv []) {
 						if (GetWindowText (hWnd, string1, 511) && 
 							shouldHotkeysBeOn (string1)) { 
 							// ATEM! 
-							#ifdef DEBUG 
-								#if DEBUG > 0 
-									print ("Window text: "); 
-									print (string1); 
-									print ("\n"); 
-								#endif 
-							#endif 
 							if (!hkRegistered && hkTurnedOn) { 
 								registerHotkeys (); 
 								hkRegistered = TRUE; 
